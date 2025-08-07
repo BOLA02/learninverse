@@ -483,9 +483,11 @@ const SystemSettings = () => {
         <Card className="shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              {tabs.find(tab => tab.id === activeTab)?.icon && (
-                <tabs.find(tab => tab.id === activeTab)!.icon className="h-5 w-5" />
-              )}
+              {(() => {
+                const activeTabData = tabs.find(tab => tab.id === activeTab);
+                const IconComponent = activeTabData?.icon;
+                return IconComponent ? <IconComponent className="h-5 w-5" /> : null;
+              })()}
               <span>{tabs.find(tab => tab.id === activeTab)?.label} Settings</span>
             </CardTitle>
           </CardHeader>
@@ -493,7 +495,7 @@ const SystemSettings = () => {
             {renderTabContent()}
           </CardContent>
         </Card>
-      </div>
+      </div> 
     </AdminLayout>
   );
 };
