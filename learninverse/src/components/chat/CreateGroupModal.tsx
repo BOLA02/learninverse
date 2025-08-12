@@ -45,7 +45,12 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
 
   const [subjectInput, setSubjectInput] = useState('');
 
-  const groupTypes = [
+  const groupTypes: Array<{
+    value: ChatGroup['type'];
+    label: string;
+    icon: any;
+    description: string;
+  }> = [
     { value: 'class', label: 'Class Group', icon: GraduationCap, description: 'For students in the same class/year' },
     { value: 'study_group', label: 'Study Group', icon: BookOpen, description: 'For collaborative studying' },
     { value: 'project', label: 'Project Team', icon: Users, description: 'For group projects and assignments' },
