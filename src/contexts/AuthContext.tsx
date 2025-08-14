@@ -1,9 +1,11 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, UserRole, mockUsers, getStoredUser, setStoredUser, clearStoredUser } from '@/lib/utils';
+import { UserRole } from '@/lib/utils';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 
 interface AuthContextType {
-  user: User | null;
+  user: FirebaseUser | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
@@ -28,63 +30,42 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user on mount
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser(storedUser);
-    }
-    setIsLoading(false);
+    // Listen for Firebase auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
-
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Mock authentication - in real app, this would be an API call
-    const foundUser = mockUsers.find(u => u.email === email);
-
-    if (foundUser && password) { // Accept any password for demo
-      const updatedUser = {
-        ...foundUser,
-        lastLogin: new Date().toISOString().split('T')[0]
-      };
-
-      setUser(updatedUser);
-      setStoredUser(updatedUser);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
       setIsLoading(false);
       return true;
+    } catch (error) {
+      setIsLoading(false);
+      return false;
     }
-
-    setIsLoading(false);
-    return false;
   };
 
   const logout = () => {
+    signOut(auth);
     setUser(null);
-    clearStoredUser();
-    // Force redirect to login with logout flag
     if (typeof window !== 'undefined') {
       window.location.href = '/login?logout=true';
     }
   };
 
-  const hasRole = (role: UserRole): boolean => {
-    if (!user) return false;
-    
-    const roleHierarchy: Record<UserRole, number> = {
-      student: 1,
-      teacher: 2,
-      admin: 3,
-      super_admin: 4
-    };
-    
-    return roleHierarchy[user.role] >= roleHierarchy[role];
+  // NOTE: You will need to store user roles in Firebase user custom claims or in your database.
+  // For now, these role checks will always return false unless you extend the Firebase user object.
+  const hasRole = (_role: UserRole): boolean => {
+    return false;
   };
 
   const value: AuthContextType = {
@@ -93,9 +74,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     isLoading,
     hasRole,
-    isAdmin: user?.role === 'admin' || user?.role === 'super_admin',
-    isStudent: user?.role === 'student',
-    isTeacher: user?.role === 'teacher'
+    isAdmin: false, // Update this logic if you add roles to Firebase users
+    isStudent: false,
+    isTeacher: false
   };
 
   return (

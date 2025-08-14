@@ -1,7 +1,8 @@
-'use client'
-import { useState, useEffect } from "react";
+"use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,33 +10,30 @@ import { Label } from "@/components/ui/label";
 import { GraduationCap, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const Login = () => {
+const Signup = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login, isLoading, user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // Only redirect after auth state is known
-    if (!isLoading && user) {
-      router.push('/pages/dashboard');
-    }
-  }, [user, isLoading, router]);
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    const success = await login(email, password);
-
-    if (success) {
-      toast.success("Login successful!");
-      // Navigation will be handled by the auth context based on user role
-    } else {
-      setError("Invalid email or password");
-      toast.error("Login failed. Please check your credentials.");
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      if (auth.currentUser && username) {
+        await updateProfile(auth.currentUser, { displayName: username });
+      }
+      toast.success("Account created! You can now log in.");
+      router.push("/login");
+    } catch (err: any) {
+      setError(err.message || "Failed to create account");
+      toast.error("Sign up failed. " + (err.message || ""));
     }
+    setIsLoading(false);
   };
 
   return (
@@ -47,18 +45,28 @@ const Login = () => {
               <GraduationCap className="h-8 w-8 text-white" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome to Learninverse</CardTitle>
-          <p className="text-muted-foreground">Sign in to your account</p>
+          <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
+          <p className="text-muted-foreground">Sign up as a student</p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSignup} className="space-y-4">
             {error && (
               <div className="flex items-center space-x-2 text-destructive text-sm">
                 <AlertCircle className="h-4 w-4" />
                 <span>{error}</span>
               </div>
             )}
-
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -70,7 +78,6 @@ const Login = () => {
                 required
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -82,24 +89,19 @@ const Login = () => {
                 required
               />
             </div>
-
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? "Signing up..." : "Sign Up"}
             </Button>
           </form>
-
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p className="mb-2">Demo Accounts:</p>
-            <div className="space-y-1 text-xs">
-              <p><strong>Student:</strong> alex.student@learninverse.com</p>
-              <p><strong>Admin:</strong> admin@learninverse.com</p>
-              <p><strong>Teacher:</strong> john.teacher@learninverse.com</p>
-              <p className="text-muted-foreground/70">Use any password</p>
-            </div>
+            <p>
+              Already have an account?{' '}
+              <a href="/login" className="text-sky-600 hover:underline">Log in</a>
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -107,4 +109,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

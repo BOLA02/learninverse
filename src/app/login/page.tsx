@@ -23,13 +23,7 @@ const Login = () => {
     const isLoggingOut = urlParams.get('logout') === 'true';
 
     if (user && !isLoggingOut) {
-      if (user.role === 'admin' || user.role === 'super_admin') {
-        router.push('/admin/dashboard');
-      } else if (user.role === 'teacher') {
-        router.push('/teacher/dashboard');
-      } else {
-        router.push('/pages/dashboard');
-      }
+      router.push('/pages/dashboard');
     }
   }, [user, router]);
 
@@ -48,12 +42,18 @@ const Login = () => {
     }
   };
 
-  if (user) {
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
+  }
+
+  if (user) {
+    // Optionally, you can redirect here or just return null
+    return null;
   }
 
   return (
@@ -111,12 +111,18 @@ const Login = () => {
           </form>
           
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p className="mb-2">Demo Accounts:</p>
-            <div className="space-y-1 text-xs">
-              <p><strong>Student:</strong> alex.student@learninverse.com</p>
-              <p><strong>Admin:</strong> admin@learninverse.com</p>
-              <p><strong>Teacher:</strong> john.teacher@learninverse.com</p>
-              <p className="text-muted-foreground/70">Use any password</p>
+            <p>
+              Don't have an account?{' '}
+              <a href="/signup" className="text-sky-600 hover:underline">Sign up</a>
+            </p>
+            <div className="mt-4">
+              <p className="mb-2">Demo Accounts:</p>
+              <div className="space-y-1 text-xs">
+                <p><strong>Student:</strong> alex.student@learninverse.com</p>
+                <p><strong>Admin:</strong> admin@learninverse.com</p>
+                <p><strong>Teacher:</strong> john.teacher@learninverse.com</p>
+                <p className="text-muted-foreground/70">Use any password</p>
+              </div>
             </div>
           </div>
         </CardContent>

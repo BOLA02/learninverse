@@ -19,27 +19,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        router.push(redirectTo);
-        return;
-      }
-
-      if (requiredRole && !hasRole(requiredRole)) {
-        // Redirect based on user role
-        if (user.role === 'student') {
-          router.push('/pages/dashboard');
-        } else if (user.role === 'teacher') {
-          router.push('/teacher/dashboard');
-        } else if (user.role === 'admin' || user.role === 'super_admin') {
-          router.push('/admin/dashboard');
-        } else {
-          router.push('/login');
-        }
-        return;
-      }
+    if (!isLoading && !user) {
+      router.push(redirectTo);
+      return;
     }
-  }, [user, isLoading, hasRole, requiredRole, router, redirectTo]);
+  }, [user, isLoading, router, redirectTo]);
 
   if (isLoading) {
     return (
@@ -49,7 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (!user || (requiredRole && !hasRole(requiredRole))) {
+  if (!user) {
     return null;
   }
 
