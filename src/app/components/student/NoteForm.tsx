@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from "firebase/firestore";
 import { useAuth } from "@/contexts/AuthContext";
@@ -53,6 +54,10 @@ const NoteForm = () => {
       recipientEmail,
       createdAt: serverTimestamp(),
     });
+    // Log and toast for successful note delivery
+    // eslint-disable-next-line no-console
+    console.log("Note sent successfully to:", recipientEmail);
+    toast.success("Note sent successfully!");
     setContent("");
     setRecipientEmail("");
     setSending(false);

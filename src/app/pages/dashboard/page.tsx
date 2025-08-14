@@ -3,6 +3,7 @@ import { FileText, Calendar, CheckCircle, Clock } from "lucide-react";
 import StatsCard from "../../../../components/dashboard/stat_card";
 import QuickAction from "../../../../components/dashboard/quick_action";
 import NoteForm from "@/app/components/student/NoteForm";
+import NoteInbox from "@/app/components/student/NoteInbox";
 import UpcomingClasses from "../../../../components/dashboard/upcoming_classes";
 import { useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -92,8 +93,13 @@ const Dashboard = () => {
         <QuickAction />
       </div>
 
-      {/* Note Form Section */}
+      {/* Note Inbox and Note Form Section */}
       <div className="mt-8">
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Notes Inbox</h2>
+          {/* Show a preview of the inbox, and allow expanding to see all notes */}
+          <NoteInbox />
+        </div>
         <h2 className="text-xl font-semibold mb-4">Send a Note to Another Student</h2>
         <NoteForm />
       </div>
