@@ -18,6 +18,11 @@ const NoteForm = () => {
     if (!snapshot.empty) {
       return snapshot.docs[0].id;
     }
+    // Debug: print all user emails in the collection
+    const allUsersSnap = await getDocs(collection(db, "users"));
+    const allEmails = allUsersSnap.docs.map(doc => doc.data().email);
+    // eslint-disable-next-line no-console
+    console.log("All user emails in Firestore:", allEmails);
     return null;
   };
 

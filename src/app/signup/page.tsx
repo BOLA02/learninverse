@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { setDoc, doc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,18 @@ const Signup = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       if (auth.currentUser && username) {
         await updateProfile(auth.currentUser, { displayName: username });
+      }
+      // Create user document in Firestore
+      try {
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          uid: userCredential.user.uid,
+          email: userCredential.user.email,
+          displayName: username,
+          createdAt: new Date().toISOString()
+        });
+      } catch (firestoreError) {
+        // eslint-disable-next-line no-console
+        console.error("Error creating user document in Firestore:", firestoreError);
       }
       toast.success("Account created! You can now log in.");
       router.push("/login");
