@@ -12,14 +12,7 @@ export default function Home() {
       if (!user) {
         router.push('/login');
       } else {
-        // Redirect based on user role
-        if (user.role === 'admin' || user.role === 'super_admin') {
-          router.push('/admin/dashboard');
-        } else if (user.role === 'teacher') {
-          router.push('/teacher/dashboard');
-        } else {
-          router.push('/pages/dashboard');
-        }
+        router.push('/pages/dashboard');
       }
     }
   }, [user, isLoading, router]);

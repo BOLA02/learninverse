@@ -73,7 +73,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ className }) => {
   };
 
   const isUserGroupAdmin = (group: ChatGroup) => {
-    const member = group.members.find(m => m.userId === user?.id);
+    const member = group.members.find(m => m.userId === user?.uid);
     return member?.role === 'admin';
   };
 

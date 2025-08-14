@@ -111,7 +111,7 @@ const TeacherDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-semibold text-foreground">Teacher Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Welcome back, {user?.name}</p>
+              <p className="text-sm text-muted-foreground">Welcome back, {user?.displayName || user?.email || "Teacher"}</p>
             </div>
             <Button
               variant="outline"
@@ -126,14 +126,14 @@ const TeacherDashboard = () => {
         <div className="space-y-6 p-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-sky-500 to-indigo-500 p-6 rounded-xl text-white">
-          <h1 className="text-2xl font-bold mb-2">Welcome back, {user?.name || 'Teacher'}!</h1>
+          <p className="text-sm text-muted-foreground">Welcome back, {user?.displayName || user?.email || "Teacher"}</p>
           <p className="opacity-90">
             You have 3 classes today and 12 assignments to review.
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">   
           {stats.map((stat, index) => (
             <Card key={index} className="shadow-card hover:shadow-elegant transition-all duration-300">
               <CardContent className="p-6">

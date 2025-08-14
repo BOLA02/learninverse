@@ -22,7 +22,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ title, description }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
-
+ 
   const handleLogout = () => {
     logout();
     router.push('/login');
@@ -65,8 +65,8 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ title, description }) => {
                 <User className="h-4 w-4 text-white" />
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-sm font-medium">{user?.name}</p>
-                <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+                <p className="text-sm font-medium">{user?.displayName}</p>
+                {/* <p className="text-xs text-muted-foreground capitalize">{user?.role}</p> */}
               </div>
               <ChevronDown className="h-4 w-4" />
             </Button>

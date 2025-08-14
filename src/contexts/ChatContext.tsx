@@ -81,8 +81,8 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       return message.groupId === activeGroup.id;
     }
     if (activePrivateChat) {
-      return (message.senderId === user?.id && message.recipientId === activePrivateChat.participants.find(p => p !== user?.id)) ||
-             (message.recipientId === user?.id && message.senderId === activePrivateChat.participants.find(p => p !== user?.id));
+      return (message.senderId === user?.uid && message.recipientId === activePrivateChat.participants.find(p => p !== user?.uid)) ||
+             (message.recipientId === user?.uid && message.senderId === activePrivateChat.participants.find(p => p !== user?.uid));
     }
     return [];
   });
@@ -100,11 +100,11 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         academicYear: groupData.academicYear,
         course: groupData.course,
         subjects: groupData.subjects,
-        createdBy: user?.id || '',
+  createdBy: user?.uid || '',
         createdAt: new Date().toISOString(),
         members: [
           {
-            userId: user?.id || '',
+            userId: user?.uid || '',
             role: 'admin',
             joinedAt: new Date().toISOString(),
             permissions: ['send_messages', 'send_media', 'add_members', 'remove_members', 'edit_group_info', 'delete_messages', 'pin_messages', 'manage_permissions']
@@ -136,7 +136,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         return false;
       }
       
-      const isAlreadyMember = group.members.some(m => m.userId === user?.id);
+  const isAlreadyMember = group.members.some(m => m.userId === user?.uid);
       if (isAlreadyMember) {
         setError('You are already a member of this group');
         setIsLoading(false);
@@ -148,7 +148,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         members: [
           ...group.members,
           {
-            userId: user?.id || '',
+            userId: user?.uid || '',
             role: 'member' as const,
             joinedAt: new Date().toISOString(),
             permissions: ['send_messages', 'send_media'] as GroupPermission[]
@@ -180,16 +180,16 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     try {
       const newMessage: ChatMessage = {
         id: Date.now().toString(),
-        senderId: user.id,
-        senderName: user.name,
-        senderAvatar: user.avatar,
+  senderId: user.uid,
+    senderName: user.displayName ?? user.email ?? '',
+    senderAvatar: user.photoURL ?? undefined,
         groupId,
         recipientId,
         content,
         type,
         timestamp: new Date().toISOString(),
         isPinned: false,
-        readBy: [{ userId: user.id, readAt: new Date().toISOString() }],
+  readBy: [{ userId: user.uid, readAt: new Date().toISOString() }],
         reactions: []
       };
       
@@ -266,7 +266,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     // Implementation for starting private chat
     const newChat: PrivateChat = {
       id: Date.now().toString(),
-      participants: [user?.id || '', userId],
+  participants: [user?.uid || '', userId],
       createdAt: new Date().toISOString(),
       isActive: true
     };

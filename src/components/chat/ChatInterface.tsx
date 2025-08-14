@@ -54,7 +54,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
     const success = await sendMessage(
       messageInput,
       activeGroup?.id,
-      activePrivateChat?.participants.find(p => p !== user?.id)
+      activePrivateChat?.participants.find(p => p !== user?.uid)
     );
 
     if (success) {
@@ -93,7 +93,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
   };
 
   const renderMessage = (message: ChatMessage, index: number) => {
-    const isOwnMessage = message.senderId === user?.id;
+    const isOwnMessage = message.senderId === user?.uid;
     const prevMessage = index > 0 ? messages[index - 1] : undefined;
     const isConsecutive = isConsecutiveMessage(message, prevMessage);
     const showDateSeparator = !prevMessage || 
@@ -175,7 +175,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
                   <div className="flex flex-wrap gap-1 mt-2">
                     {message.reactions.map((reaction, idx) => (
                       <Badge key={idx} variant="outline" className="text-xs px-1 py-0">
-                        {reaction.emoji} {reaction.userId === user?.id ? 'You' : '1'}
+                        {reaction.emoji} {reaction.userId === user?.uid ? 'You' : '1'}
                       </Badge>
                     ))}
                   </div>

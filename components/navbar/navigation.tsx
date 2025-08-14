@@ -98,8 +98,8 @@ const Navigation = () => {
             {user && (
               <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-border">
                 <div className="text-sm">
-                  <p className="font-medium text-foreground">{user.name}</p>
-                  <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+                  <p className="font-medium text-foreground">{user.displayName || user.email || "Student"}</p>
+                  {/* <p className="text-xs text-muted-foreground capitalize">{user.role}</p> */}
                 </div>
                 <Button
                   variant="ghost"
@@ -150,8 +150,8 @@ const Navigation = () => {
               {user && (
                 <div className="border-t border-border pt-4 mt-4">
                   <div className="px-3 py-2">
-                    <p className="font-medium text-foreground">{user.name}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
+                    <p className="font-medium text-foreground">{user.displayName || user.email || "Student"}</p>
+                    {/* <p className="text-xs text-muted-foreground capitalize">{user.role}</p> */}
                   </div>
                   <Button
                     variant="ghost"
