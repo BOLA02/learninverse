@@ -12,7 +12,11 @@ const NoteInbox = () => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-      if (!user) return;
+      if (!user || !user.uid) {
+        // eslint-disable-next-line no-console
+        console.log("DEBUG: Skipping fetchNotes, user or user.uid not ready", user);
+        return;
+      }
       setLoading(true);
       setError("");
       try {
