@@ -41,6 +41,8 @@ const NoteForm = () => {
     }
     setSending(true);
     const recipientId = await getRecipientIdByEmail(recipientEmail.trim());
+    // eslint-disable-next-line no-console
+    console.log("DEBUG: recipientId found for email", recipientEmail, ":", recipientId);
     if (!recipientId) {
       setError("Recipient not found.");
       setSending(false);
@@ -56,7 +58,7 @@ const NoteForm = () => {
     });
     // Log and toast for successful note delivery
     // eslint-disable-next-line no-console
-    console.log("Note sent successfully to:", recipientEmail);
+    console.log("Note sent successfully to:", recipientEmail, "with recipientId:", recipientId);
     toast.success("Note sent successfully!");
     setContent("");
     setRecipientEmail("");

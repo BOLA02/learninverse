@@ -24,7 +24,16 @@ const NoteInbox = () => {
         const snapshot = await getDocs(q);
         const notesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setNotes(notesData);
-        // Log notes to console for debugging
+        // Debug: print user.uid and all recipientIds in fetched notes
+        // eslint-disable-next-line no-console
+        console.log("DEBUG: Inbox user.uid:", user.uid);
+        if (Array.isArray(notesData)) {
+          // Defensive: log recipientIds, handle missing field
+          const recipientIds = notesData.map(n => n && typeof n === 'object' && 'recipientId' in n ? n.recipientId : '[missing]');
+          console.log("DEBUG: recipientIds in fetched notes:", recipientIds);
+        } else {
+          console.log("DEBUG: notesData is not an array", notesData);
+        }
         // eslint-disable-next-line no-console
         console.log("Fetched notes for inbox:", notesData);
       } catch (err: any) {
