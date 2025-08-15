@@ -21,10 +21,10 @@ const NoteInbox = () => {
       setError("");
       try {
         const q = query(
-          collection(db, "notes"),
-          where("recipientId", "==", user.uid),
-          orderBy("createdAt", "desc")
-        );
+  collection(db, "notes"),
+  where("recipientId", "==", user.uid),
+  orderBy("createdAt", "desc")
+);
         const snapshot = await getDocs(q);
         const notesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setNotes(notesData);
