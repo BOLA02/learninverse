@@ -113,16 +113,16 @@ const Login = () => {
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>
               Don't have an account?{' '}
-              <a href="/signup" className="text-sky-600 hover:underline">Sign up</a>
+              <a href="/signup" className="text-sky-600 hover:underline mb-4">Sign up</a>
             </p>
             <div className="mt-4">
-              <p className="mb-2">Demo Accounts:</p>
+              {/* <p className="mb-2">Demo Accounts:</p>
               <div className="space-y-1 text-xs">
                 <p><strong>Student:</strong> alex.student@learninverse.com</p>
                 <p><strong>Admin:</strong> admin@learninverse.com</p>
                 <p><strong>Teacher:</strong> john.teacher@learninverse.com</p>
                 <p className="text-muted-foreground/70">Use any password</p>
-              </div>
+              </div> */}
             </div>
           </div>
         </CardContent>
